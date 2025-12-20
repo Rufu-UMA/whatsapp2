@@ -1,6 +1,8 @@
-package com.example.whatsapp2;
+package com.example.whatsapp2.activities;
 
 import android.os.Bundle;
+import android.widget.Button;
+import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -8,7 +10,14 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.example.whatsapp2.R;
+
 public class MainActivity extends AppCompatActivity {
+
+    /* Prueba */
+    private TextView textCoin;
+    private Button buttonAddCoin;
+    private int coinCount = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,5 +29,18 @@ public class MainActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        /* Prueba (está dentro de OnCreate) */
+        textCoin = findViewById(R.id.textCoin);
+        buttonAddCoin = findViewById(R.id.buttonAddCoin);
+        buttonAddCoin.setOnClickListener(v -> {
+            coinCount++;
+            textCoin.setText("Coins: " + coinCount);
+        });
     }
+
+
+
+
+
 }
