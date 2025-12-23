@@ -1,9 +1,13 @@
 <resources>
     <!-- Pongo los String en variables -->
     <string name="app_name">Whatsapp2</string>
-    <string name="coin_image_description">Imagen de una moneda</string>
+    <string name="coin_image_description">Moneda</string>
     <string name="coin_default_value">0</string>
     <string name="language">Idioma</string>
     <string name="notifications">Notificaciones</string>
     <string name="settings">Ajustes</string>
+    <string name="profile_image">Imagen de perfil</string>
+    <string name="contact_name_placeholder">Nombre Contacto</string>
+    <string name="mensaje">Mensaje</string>
+    <string name="coste0_80">Coste: 0.80</string>
 </resources>

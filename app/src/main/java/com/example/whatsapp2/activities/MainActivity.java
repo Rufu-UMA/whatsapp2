@@ -17,6 +17,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.whatsapp2.R;
+import com.example.whatsapp2.fragments.ContactsFragment;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -37,33 +38,39 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
-        /* Prueba (está dentro de OnCreate) */
-        textCoin = findViewById(R.id.textCoin);
-        buttonAddCoin = findViewById(R.id.buttonAddCoin);
-        buttonAddCoin.setOnClickListener(v -> {
-            coinCount++;
-            textCoin.setText("Coins: " + coinCount);
-        });
+        if (savedInstanceState == null) { // Si no hay estado guardado, se carga el fragmento de contactos
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragmentContainerView, new ContactsFragment())
+                    .commit();
+        }
 
-        showPopupButton = findViewById(R.id.showPopupButton);
-        showPopupButton.setOnClickListener(v -> {
-            LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
-            View popupView = inflater.inflate(R.layout.activity_popup, null);
-
-            int width = ConstraintLayout.LayoutParams.WRAP_CONTENT;
-            int height = ConstraintLayout.LayoutParams.WRAP_CONTENT;
-            boolean focusable = true;
-            final PopupWindow popupWindow = new PopupWindow(popupView, width, height, focusable);
-
-            popupWindow.showAtLocation(v, Gravity.CENTER, 0, 0);
-
-            ImageButton closeButton = popupView.findViewById(R.id.close_button);
-            closeButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    popupWindow.dismiss();
-                }
-            });
-        });
+//        /* Prueba (está dentro de OnCreate) */
+//        textCoin = findViewById(R.id.textCoin);
+//        buttonAddCoin = findViewById(R.id.buttonAddCoin);
+//        buttonAddCoin.setOnClickListener(v -> {
+//            coinCount++;
+//            textCoin.setText("Coins: " + coinCount);
+//        });
+//
+//        showPopupButton = findViewById(R.id.showPopupButton);
+//        showPopupButton.setOnClickListener(v -> {
+//            LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
+//            View popupView = inflater.inflate(R.layout.activity_popup, null);
+//
+//            int width = ConstraintLayout.LayoutParams.WRAP_CONTENT;
+//            int height = ConstraintLayout.LayoutParams.WRAP_CONTENT;
+//            boolean focusable = true;
+//            final PopupWindow popupWindow = new PopupWindow(popupView, width, height, focusable);
+//
+//            popupWindow.showAtLocation(v, Gravity.CENTER, 0, 0);
+//
+//            ImageButton closeButton = popupView.findViewById(R.id.close_button);
+//            closeButton.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    popupWindow.dismiss();
+//                }
+//            });
+//        });
     }
 }

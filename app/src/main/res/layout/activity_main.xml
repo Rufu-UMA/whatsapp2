@@ -50,29 +50,9 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintTop_toBottomOf="@id/toolbar"
-        app:layout_constraintBottom_toTopOf="@id/bottomNavigation">
+        app:layout_constraintBottom_toTopOf="@id/bottomNavigation"
+        tools:layout="@layout/fragment_contacts" />
 
-    </androidx.fragment.app.FragmentContainerView>
-
-    <!-- Boton de prueba, quitar xD -->
-    <Button
-        android:id="@+id/buttonAddCoin"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="AñadirMoneda"
-        app:layout_constraintTop_toTopOf="@id/fragmentContainerView"
-        app:layout_constraintBottom_toBottomOf="@id/fragmentContainerView"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
-
-    <Button
-        android:id="@+id/showPopupButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Show Popup"
-        app:layout_constraintTop_toBottomOf="@id/buttonAddCoin"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
 
     <!-- Barra de navegación inferior -->
     <com.google.android.material.bottomnavigation.BottomNavigationView
@@ -80,6 +60,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:menu="@menu/bottom_navigation_menu" />
+        app:menu="@menu/bottom_navigation_menu"
+        tools:ignore="VisualLintBottomNav" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
