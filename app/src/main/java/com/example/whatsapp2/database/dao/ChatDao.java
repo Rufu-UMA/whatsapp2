@@ -13,12 +13,20 @@ public abstract class ChatDao {
     @Query("SELECT * FROM usuarios")
     public abstract List<Usuario> getAllUsers();
 
+    // Obtener contactos (todos los usuarios excepto el usuario actual con ID 1)
+    @Query("SELECT * FROM usuarios WHERE id != 1")
+    public abstract List<Usuario> getContacts();
+
+    // Obtener usuario por ID
+    @Query("SELECT * FROM usuarios WHERE id = :usuarioId")
+    public abstract Usuario getUserById(int usuarioId);
+
     @Insert
     public abstract void insertUsuario(Usuario usuario);
 
-    // Obtener saldo
+    // Obtener saldo (devuelve null si no existe el usuario)
     @Query("SELECT monedas FROM usuarios WHERE id = :usuarioId")
-    public abstract double getUserBalance(int usuarioId);
+    public abstract Double getUserBalance(int usuarioId);
 
     // Actualizar saldo
     @Query("UPDATE usuarios SET monedas = :nuevoSaldo WHERE id = :usuarioId")
@@ -35,8 +43,9 @@ public abstract class ChatDao {
     // Enviar mensaje con saldo
     @Transaction
     public boolean enviarMensajeConSaldo(Mensaje mensaje, double costoMensaje) {
-        double saldoActual = getUserBalance(mensaje.usuarioId);
-        if (saldoActual >= costoMensaje) {
+        Double saldoActual = getUserBalance(mensaje.usuarioId);
+        // Verificar que el usuario existe y tiene saldo suficiente
+        if (saldoActual != null && saldoActual >= costoMensaje) {
             // Actualizar saldo
             double nuevoSaldo = saldoActual - costoMensaje;
             updateUserBalance(mensaje.usuarioId, nuevoSaldo);
@@ -44,7 +53,7 @@ public abstract class ChatDao {
             insertMensaje(mensaje);
             return true; // Mensaje enviado exitosamente
         } else {
-            return false; // Saldo insuficiente
+            return false; // Saldo insuficiente o usuario no encontrado
         }
     }
 }

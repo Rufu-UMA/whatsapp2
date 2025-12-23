@@ -1,6 +1,7 @@
 package com.example.whatsapp2.activities;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -85,8 +86,15 @@ public class ChatActivity extends AppCompatActivity {
             mensaje.HoraEnvio = System.currentTimeMillis();
 
             Executors.newSingleThreadExecutor().execute(() -> {
+                // Verificar saldo antes de enviar (para depuración)
+                Double saldoAntes = AppBaseDeDatos.getDatabase(this).chatDao().getUserBalance(currentUserId);
+                Log.d("ChatActivity", "Saldo antes de enviar: " + saldoAntes + " para usuario ID: " + currentUserId);
+
                 // Intentamos enviar el mensaje con un costo de 0.80 monedas
                 boolean enviado = AppBaseDeDatos.getDatabase(this).chatDao().enviarMensajeConSaldo(mensaje, 0.80);
+
+                Double saldoDespues = AppBaseDeDatos.getDatabase(this).chatDao().getUserBalance(currentUserId);
+                Log.d("ChatActivity", "Saldo después de enviar: " + saldoDespues + " | Enviado: " + enviado);
 
                 runOnUiThread(() -> {
                     if (enviado) {

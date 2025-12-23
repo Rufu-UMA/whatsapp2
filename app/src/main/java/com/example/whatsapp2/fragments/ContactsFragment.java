@@ -39,22 +39,7 @@ public class ContactsFragment extends Fragment {
     private void loadContacts() {
         Executors.newSingleThreadExecutor().execute(() -> {
             ChatDao dao = AppBaseDeDatos.getDatabase(getContext()).chatDao();
-            List<Usuario> users = dao.getAllUsers();
-
-            // El primer usuario de la base de datos será siempre el usuario actual (ID 1)
-            // Filtrar el usuario actual (ID 1) para que no aparezca en la lista
-            // Usamos removeIf (Java 8+) o creamos una nueva lista
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-                users.removeIf(u -> u.id == 1);
-            } else {
-                // Compatibilidad para versiones antiguas
-                for (int i = 0; i < users.size(); i++) {
-                    if (users.get(i).id == 1) {
-                        users.remove(i);
-                        break;
-                    }
-                }
-            }
+            List<Usuario> users = dao.getContacts(); // Obtiene solo los contactos (excluyendo al usuario actual)
 
             List<Usuario> finalUsers = users;
             if (getActivity() != null) {

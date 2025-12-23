@@ -1,31 +1,26 @@
 package com.example.whatsapp2.activities;
 
 import android.os.Bundle;
-import android.view.Gravity;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.Button;
-import android.widget.ImageButton;
-import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.whatsapp2.R;
+import com.example.whatsapp2.database.AppBaseDeDatos;
+import com.example.whatsapp2.database.entities.Usuario;
 import com.example.whatsapp2.fragments.ContactsFragment;
+
+import java.util.Locale;
+import java.util.concurrent.Executors;
 
 public class MainActivity extends AppCompatActivity {
 
-    /* Prueba */
+    private static final int CURRENT_USER_ID = 1; // ID del usuario actual
     private TextView textCoin;
-    private Button buttonAddCoin;
-    private int coinCount = 0;
-    private Button showPopupButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,33 +39,38 @@ public class MainActivity extends AppCompatActivity {
                     .commit();
         }
 
-//        /* Prueba (está dentro de OnCreate) */
-//        textCoin = findViewById(R.id.textCoin);
-//        buttonAddCoin = findViewById(R.id.buttonAddCoin);
-//        buttonAddCoin.setOnClickListener(v -> {
-//            coinCount++;
-//            textCoin.setText("Coins: " + coinCount);
-//        });
-//
-//        showPopupButton = findViewById(R.id.showPopupButton);
-//        showPopupButton.setOnClickListener(v -> {
-//            LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
-//            View popupView = inflater.inflate(R.layout.activity_popup, null);
-//
-//            int width = ConstraintLayout.LayoutParams.WRAP_CONTENT;
-//            int height = ConstraintLayout.LayoutParams.WRAP_CONTENT;
-//            boolean focusable = true;
-//            final PopupWindow popupWindow = new PopupWindow(popupView, width, height, focusable);
-//
-//            popupWindow.showAtLocation(v, Gravity.CENTER, 0, 0);
-//
-//            ImageButton closeButton = popupView.findViewById(R.id.close_button);
-//            closeButton.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    popupWindow.dismiss();
-//                }
-//            });
-//        });
+        // Inicializar el TextView de las monedas
+        textCoin = findViewById(R.id.textCoin);
+
+        // Cargar las monedas del usuario
+        loadUserCoins();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // Actualizar las monedas cada vez que se vuelve a la activity
+        loadUserCoins();
+    }
+
+    /**
+     * Carga las monedas del usuario actual desde la base de datos y actualiza el TextView
+     */
+    private void loadUserCoins() {
+        Executors.newSingleThreadExecutor().execute(() -> {
+            Usuario usuario = AppBaseDeDatos.getDatabase(this).chatDao().getUserById(CURRENT_USER_ID);
+            if (usuario != null) {
+                runOnUiThread(() -> {
+                    // Formatear las monedas (sin decimales si es número entero)
+                    String coinsText;
+                    if (usuario.monedas == (long) usuario.monedas) {
+                        coinsText = String.valueOf((long) usuario.monedas);
+                    } else {
+                        coinsText = String.format(Locale.getDefault(), "%.2f", usuario.monedas);
+                    }
+                    textCoin.setText(coinsText);
+                });
+            }
+        });
     }
 }
