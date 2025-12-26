@@ -1,17 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/messageLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-
+    android:orientation="vertical"
     android:padding="8dp">
 
     <TextView
-        android:id="@+id/textMessageContent"
+        android:id="@+id/messageText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/ic_launcher_background"
-        android:padding="8dp"
-        android:text="@string/mensaje"
-        android:textColor="@android:color/black" />
+        android:background="@drawable/box_golden_nine_patch_smaller"
+        android:minWidth="60dp"
+        android:paddingHorizontal="14dp"
+        android:paddingVertical="12dp"
+        android:text="qwdqw"
+        android:textColor="@color/golden_text" />
 
 </LinearLayout>

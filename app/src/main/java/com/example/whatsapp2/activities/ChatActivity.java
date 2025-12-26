@@ -1,12 +1,18 @@
 package com.example.whatsapp2.activities;
 
+import android.media.Image;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.whatsapp2.R;
@@ -21,7 +27,8 @@ public class ChatActivity extends AppCompatActivity {
     private int contactId;
     private String contactName;
     private EditText editTextMessage;
-    private Button buttonSend;
+    private ImageButton buttonSend;
+    private ImageButton backButton;
     private RecyclerView recyclerViewMessages;
     private MessagesAdapter adapter;
     private int currentUserId = 1; // Como no hay login, este será el id del usuario actual
@@ -33,26 +40,27 @@ public class ChatActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+        getWindow().setStatusBarColor(android.graphics.Color.TRANSPARENT);
         setContentView(R.layout.activity_chat);
 
         contactId = getIntent().getIntExtra("CONTACT_ID", -1);
         contactName = getIntent().getStringExtra("CONTACT_NAME");
 
-        Toolbar toolbar = findViewById(R.id.toolbarChat);
-        setSupportActionBar(toolbar);
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setTitle(contactName);
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        }
+        TextView nombre = findViewById(R.id.contactName);
+        nombre.setText(contactName);
 
         editTextMessage = findViewById(R.id.editTextMessage);
         buttonSend = findViewById(R.id.buttonSend);
+        backButton = findViewById(R.id.backButton);
         recyclerViewMessages = findViewById(R.id.recyclerViewMessages);
         recyclerViewMessages.setLayoutManager(new LinearLayoutManager(this));
 
         loadMessages();
 
         buttonSend.setOnClickListener(v -> sendMessage());
+
+        backButton.setOnClickListener(v -> finish());
     }
 
     /**

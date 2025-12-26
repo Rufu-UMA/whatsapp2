@@ -14,8 +14,8 @@ import java.util.List;
 
 public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.MessageViewHolder> {
 
-    private List<Mensaje> messages; // Toma la lista de mensajes del Usuario del chat correspondiente
-    private int currentUserId; // Usuario actual para diferenciar mensajes enviados y recibidos
+    private final List<Mensaje> messages; // Toma la lista de mensajes del Usuario del chat correspondiente
+    private final int currentUserId; // Usuario actual para diferenciar mensajes enviados y recibidos
 
     public MessagesAdapter(List<Mensaje> messages, int currentUserId) {
         this.messages = messages;
@@ -40,13 +40,13 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.Messag
         return messages.size();
     }
 
-    static class MessageViewHolder extends RecyclerView.ViewHolder {
+    public static class MessageViewHolder extends RecyclerView.ViewHolder {
         TextView textContent;
         LinearLayout layout;
 
         public MessageViewHolder(@NonNull View itemView) {
             super(itemView);
-            textContent = itemView.findViewById(R.id.textMessageContent);
+            textContent = itemView.findViewById(R.id.messageText);
             layout = (LinearLayout) itemView;
         }
 
@@ -54,12 +54,9 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.Messag
             textContent.setText(message.contenido);
             if (message.usuarioId == currentUserId) {
                 layout.setGravity(Gravity.END);
-                textContent.setBackgroundColor(0xFFDCF8C6); // Mensajes enviados de color verde claro
             } else {
                 layout.setGravity(Gravity.START);
-                textContent.setBackgroundColor(0xFFFFFFFF); // Mensajes recibidos de color blanco
             }
         }
     }
 }
-
