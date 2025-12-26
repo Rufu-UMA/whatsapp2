@@ -1,32 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-
-    android:padding="16dp"
-    android:gravity="center_vertical">
+    android:padding="16dp">
 
     <ImageView
         android:id="@+id/imageProfile"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:src="@drawable/ic_launcher_foreground"
-        android:background="@drawable/ic_launcher_background"
-        android:contentDescription="@string/profile_image" />
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_alignParentStart="true"
+        android:layout_centerVertical="true"
+        android:background="@drawable/gold_circle"
+        android:contentDescription="@string/profile_image"
+        android:padding="5dp"
+        android:src="@drawable/ic_launcher_foreground" />
 
-    <TextView
-        android:id="@+id/textName"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_toEndOf="@id/imageProfile"
         android:layout_marginStart="16dp"
-        android:fontFamily="@font/custom_font"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        android:text="@string/contact_name_placeholder"
-        android:textColor="@color/golden_text"
-        android:shadowColor="#000000"
-        android:shadowDx="1"
-        android:shadowDy="1"
-        android:shadowRadius="2"/>
+        android:layout_centerVertical="true"
+        android:orientation="vertical">
 
-</LinearLayout>
+        <TextView
+            android:id="@+id/textName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/contact_name_placeholder"
+            android:textColor="@color/golden_text"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/textLastMessage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Sahi h"
+            android:textColor="@android:color/white"
+            android:textSize="14sp" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/textDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:text="12/07/18"
+        android:textColor="@android:color/white"
+        android:textSize="12sp" />
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@id/imageProfile"
+        android:layout_marginTop="16dp"
+        android:src="@drawable/thin_sepparator_line"
+        android:layout_marginStart="76dp"/>
+
+</RelativeLayout>
