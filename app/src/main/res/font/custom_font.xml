@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<font-family xmlns:android="http://schemas.android.com/apk/res/android">
+    <!--
+      To use a custom font:
+      1. Add your font file (e.g., a .ttf or .otf file) to this 'res/font' directory.
+      2. Replace 'placeholder_font' in the line below with the name of your font file (without the extension).
+         For example, if you add 'my_cool_font.ttf', you would use '@font/my_cool_font'.
+    -->
+    <font
+        android:fontStyle="normal"
+        android:fontWeight="400"
+        android:font="@font/latoblack" />
+</font-family>
