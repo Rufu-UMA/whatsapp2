@@ -31,7 +31,7 @@
                 android:layout_marginStart="16dp"
                 android:contentDescription="@string/coin_image_description"
                 android:drawablePadding="4dp"
-                android:fontFamily="@font/custom_font"
+                android:fontFamily="cursive"
                 android:gravity="center_vertical"
                 android:text="@string/coin_default_value"
                 android:textColor="@color/golden_text"
@@ -41,20 +41,6 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/title"
                 app:layout_constraintVertical_bias="0.45" />
-
-            <ImageButton
-                android:id="@+id/iconMoney"
-                android:layout_width="36dp"
-                android:layout_height="36dp"
-                android:layout_marginStart="4dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:contentDescription="@string/coin_image_description"
-                android:padding="6dp"
-                android:scaleType="centerInside"
-                android:src="@drawable/money_icon_gold"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/textCoin"
-                app:layout_constraintTop_toBottomOf="@+id/title" />
 
             <TextView
                 android:id="@+id/title"

@@ -68,6 +68,7 @@ public class MainActivity extends AppCompatActivity {
                     } else {
                         coinsText = String.format(Locale.getDefault(), "%.2f", usuario.monedas);
                     }
+                    coinsText += " $";
                     textCoin.setText(coinsText);
                 });
             }
