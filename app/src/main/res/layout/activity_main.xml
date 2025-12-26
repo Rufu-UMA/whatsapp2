@@ -32,7 +32,7 @@
                 android:contentDescription="@string/notifications"
                 android:padding="8dp"
                 android:scaleType="centerInside"
-                android:src="@drawable/bell_icon_gold_final"
+                android:src="@drawable/bell_icon_gold"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -46,7 +46,7 @@
                 android:contentDescription="@string/notifications"
                 android:padding="8dp"
                 android:scaleType="centerInside"
-                android:src="@drawable/money_icon_gold_final"
+                android:src="@drawable/money_icon_gold"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/textCoin"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -93,7 +93,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
-        android:src="@drawable/add_button_gold_final"
+        android:src="@drawable/add_button_gold"
         app:backgroundTint="@android:color/transparent"
         app:borderWidth="0dp"
         app:elevation="0dp"
