@@ -10,7 +10,7 @@ import java.util.concurrent.Executors;
 import com.example.whatsapp2.database.dao.ChatDao;
 import com.example.whatsapp2.database.entities.Mensaje;
 import com.example.whatsapp2.database.entities.Usuario;
-@Database(entities = {Usuario.class, Mensaje.class}, version = 3)
+@Database(entities = {Usuario.class, Mensaje.class}, version = 4)
 public abstract class AppBaseDeDatos extends RoomDatabase {
     private static AppBaseDeDatos INSTANCE;
     public abstract ChatDao chatDao();

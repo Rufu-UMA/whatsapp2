@@ -1,8 +1,10 @@
 package com.example.whatsapp2.adapters;
 
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -44,14 +46,27 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.Contac
 
     static class ContactViewHolder extends RecyclerView.ViewHolder {
         TextView textName;
+        ImageView imageProfile;
 
         public ContactViewHolder(@NonNull View itemView) {
             super(itemView);
             textName = itemView.findViewById(R.id.textName);
+            imageProfile = itemView.findViewById(R.id.imageProfile);
         }
 
         public void bind(final Usuario contact, final OnContactClickListener listener) {
             textName.setText(contact.nombre);
+
+            if (contact.fotoPerfil != null && !contact.fotoPerfil.isEmpty()) {
+                try {
+                    imageProfile.setImageURI(Uri.parse(contact.fotoPerfil));
+                } catch (Exception e) {
+                    imageProfile.setImageResource(R.drawable.ic_launcher_foreground);
+                }
+            } else {
+                imageProfile.setImageResource(R.drawable.ic_launcher_foreground);
+            }
+
             itemView.setOnClickListener(v -> listener.onContactClick(contact));
         }
     }
