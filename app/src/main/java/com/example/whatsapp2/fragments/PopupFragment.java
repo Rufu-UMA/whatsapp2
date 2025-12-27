@@ -4,11 +4,14 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
@@ -19,6 +22,22 @@ import java.util.Random;
 import java.util.concurrent.Executors;
 
 public class PopupFragment extends DialogFragment {
+
+    public interface OnCoinUpdateListener {
+        void onCoinUpdated();
+    }
+
+    private OnCoinUpdateListener listener;
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        if (context instanceof OnCoinUpdateListener) {
+            listener = (OnCoinUpdateListener) context;
+        } else {
+            throw new RuntimeException(context.toString() + " must implement OnCoinUpdateListener");
+        }
+    }
 
     public static final String TAG = "PopupFragment";
     private final Random random = new Random();
@@ -35,18 +54,30 @@ public class PopupFragment extends DialogFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        setCancelable(false);
+
         operacionesSaldo = new OperacionesSaldo(AppBaseDeDatos.getDatabase(getContext()).chatDao());
 
         if (getDialog() != null && getDialog().getWindow() != null) {
             getDialog().getWindow().setBackgroundDrawableResource(android.R.color.transparent);
         }
 
+        final RadioGroup radioGroup = view.findViewById(R.id.radio_group);
+
         view.findViewById(R.id.send_button).setOnClickListener(v -> {
+            if (radioGroup.getCheckedRadioButtonId() == -1) {
+                Toast.makeText(getContext(), "Se debe seleccionar una respuesta", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
             v.setEnabled(false);
             double amount = 0.01 + (2.0 * random.nextDouble());
 
             Executors.newSingleThreadExecutor().execute(() -> {
                 operacionesSaldo.addCoins(currentUserId, amount);
+                if (listener != null) {
+                    listener.onCoinUpdated();
+                }
             });
 
             final int[] anchorPos = new int[2];
@@ -90,20 +121,13 @@ public class PopupFragment extends DialogFragment {
         textView.setX(initialX);
         textView.setY(initialY);
 
-// --- FIX STARTS HERE ---
-
-// 1. Change "translationY" to "y"
-// 2. Animate from current initialY to (initialY - 200)
         ObjectAnimator moveUp = ObjectAnimator.ofFloat(textView, "y", initialY, initialY - 200f);
         moveUp.setDuration(1500);
 
         ObjectAnimator fadeOut = ObjectAnimator.ofFloat(textView, "alpha", 1f, 0f);
         fadeOut.setDuration(1500);
 
-// --- FIX ENDS HERE ---
-
         moveUp.addListener(new AnimatorListenerAdapter() {
-            // ... rest of code
             @Override
             public void onAnimationEnd(Animator animation) {
                 container.removeView(textView);

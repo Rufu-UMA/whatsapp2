@@ -13,11 +13,12 @@ import com.example.whatsapp2.R;
 import com.example.whatsapp2.api.OperacionesSaldo;
 import com.example.whatsapp2.database.AppBaseDeDatos;
 import com.example.whatsapp2.fragments.ContactsFragment;
+import com.example.whatsapp2.fragments.PopupFragment;
 
 import java.util.Locale;
 import java.util.concurrent.Executors;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements PopupFragment.OnCoinUpdateListener {
 
     private static final int CURRENT_USER_ID = 1; // ID del usuario actual
     private TextView textCoin;
@@ -61,5 +62,10 @@ public class MainActivity extends AppCompatActivity {
                 });
             }
         });
+    }
+
+    @Override
+    public void onCoinUpdated() {
+        loadUserCoins();
     }
 }
