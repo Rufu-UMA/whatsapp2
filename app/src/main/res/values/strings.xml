@@ -10,4 +10,6 @@
     <string name="contact_name_placeholder">Nombre Contacto</string>
     <string name="mensaje">Mensaje</string>
     <string name="coste0_80">Coste: 0.80$</string>
+    <string name="send">Enviar</string>
+    <string name="form">Cuestionario</string>
 </resources>

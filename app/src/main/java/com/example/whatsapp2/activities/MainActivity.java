@@ -39,36 +39,22 @@ public class MainActivity extends AppCompatActivity {
                     .commit();
         }
 
-        // Inicializar el TextView de las monedas
         textCoin = findViewById(R.id.textCoin);
-
-        // Cargar las monedas del usuario
         loadUserCoins();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        // Actualizar las monedas cada vez que se vuelve a la activity
         loadUserCoins();
     }
 
-    /**
-     * Carga las monedas del usuario actual desde la base de datos y actualiza el TextView
-     */
-    private void loadUserCoins() {
+    public void loadUserCoins() {
         Executors.newSingleThreadExecutor().execute(() -> {
             Usuario usuario = AppBaseDeDatos.getDatabase(this).chatDao().getUserById(CURRENT_USER_ID);
             if (usuario != null) {
                 runOnUiThread(() -> {
-                    // Formatear las monedas (sin decimales si es número entero)
-                    String coinsText;
-                    if (usuario.monedas == (long) usuario.monedas) {
-                        coinsText = String.valueOf((long) usuario.monedas);
-                    } else {
-                        coinsText = String.format(Locale.getDefault(), "%.2f", usuario.monedas);
-                    }
-                    coinsText += " $";
+                    String coinsText = String.format(Locale.getDefault(), "%.2f $", usuario.monedas);
                     textCoin.setText(coinsText);
                 });
             }

@@ -7,6 +7,7 @@ import androidx.room.Transaction;
 import com.example.whatsapp2.database.entities.Mensaje;
 import com.example.whatsapp2.database.entities.Usuario;
 import java.util.List;
+
 @Dao
 public abstract class ChatDao {
     // Obtener todos los usuarios
@@ -54,6 +55,14 @@ public abstract class ChatDao {
             return true; // Mensaje enviado exitosamente
         } else {
             return false; // Saldo insuficiente o usuario no encontrado
+        }
+    }
+
+    @Transaction
+    public void addBalance(int userId, double amount) {
+        Double currentBalance = getUserBalance(userId);
+        if (currentBalance != null) {
+            updateUserBalance(userId, currentBalance + amount);
         }
     }
 }
