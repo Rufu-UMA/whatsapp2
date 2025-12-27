@@ -1,24 +1,23 @@
 package com.example.whatsapp2.activities;
 
-import android.media.Image;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.View;
-import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.whatsapp2.R;
 import com.example.whatsapp2.database.AppBaseDeDatos;
 import com.example.whatsapp2.database.entities.Mensaje;
 import com.example.whatsapp2.adapters.MessagesAdapter;
+import com.example.whatsapp2.utils.Botkit;
+
 import java.util.List;
 import java.util.concurrent.Executors;
 
@@ -109,6 +108,8 @@ public class ChatActivity extends AppCompatActivity {
                         // Si se envió correctamente, limpiamos el campo y recargamos
                         editTextMessage.setText("");
                         loadMessages();
+                        // Simular respuesta del contacto
+                        simulateResponse(content);
                     } else {
                         // Si falló (saldo insuficiente), mostramos un mensaje de error
                         Toast.makeText(ChatActivity.this, "Error: Saldo insuficiente. Necesitas 0.80 monedas.", Toast.LENGTH_LONG).show();
@@ -118,6 +119,25 @@ public class ChatActivity extends AppCompatActivity {
         } else {
             Toast.makeText(this, "Por favor, escribe un mensaje.", Toast.LENGTH_SHORT).show(); // Se muestra una ventana de error
         }
+    }
+
+    private void simulateResponse(String userMessage) {
+        new Handler(Looper.getMainLooper()).postDelayed(() -> {
+            Executors.newSingleThreadExecutor().execute(() -> {
+                String botReply = Botkit.getResponse(userMessage);
+                
+                Mensaje response = new Mensaje();
+                response.usuarioId = contactId; // El remitente es el contacto
+                response.contactoId = currentUserId; // El destinatario es el usuario actual
+                response.contenido = botReply;
+                response.HoraEnvio = System.currentTimeMillis();
+                
+                // Insertar mensaje de respuesta (sin costo para el usuario)
+                AppBaseDeDatos.getDatabase(this).chatDao().insertMensaje(response);
+                
+                runOnUiThread(this::loadMessages);
+            });
+        }, 1000); // Retraso de 1 segundo para simular "escribiendo..."
     }
 
     /**

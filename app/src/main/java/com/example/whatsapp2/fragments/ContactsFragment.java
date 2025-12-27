@@ -36,7 +36,8 @@ public class ContactsFragment extends Fragment {
         return view;
     }
 
-    private void loadContacts() {
+    public void loadContacts() {
+        if (getContext() == null) return;
         Executors.newSingleThreadExecutor().execute(() -> {
             ChatDao dao = AppBaseDeDatos.getDatabase(getContext()).chatDao();
             List<Usuario> users = dao.getContacts(); // Obtiene solo los contactos (excluyendo al usuario actual)

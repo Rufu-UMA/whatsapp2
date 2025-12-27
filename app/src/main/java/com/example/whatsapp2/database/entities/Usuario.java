@@ -8,4 +8,5 @@ public class Usuario {
     public int id;
     public String nombre;
     public double monedas;
+    public String fotoPerfil; // URI de la imagen
 }
