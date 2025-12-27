@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import com.example.whatsapp2.R;
+import com.example.whatsapp2.api.OperacionesSaldo;
 import com.example.whatsapp2.database.AppBaseDeDatos;
 import java.util.Random;
 import java.util.concurrent.Executors;
@@ -22,6 +23,7 @@ public class PopupFragment extends DialogFragment {
     public static final String TAG = "PopupFragment";
     private final Random random = new Random();
     private final int currentUserId = 1; // Hardcoded user ID
+    private OperacionesSaldo operacionesSaldo;
 
     @Nullable
     @Override
@@ -33,6 +35,8 @@ public class PopupFragment extends DialogFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        operacionesSaldo = new OperacionesSaldo(AppBaseDeDatos.getDatabase(getContext()).chatDao());
+
         if (getDialog() != null && getDialog().getWindow() != null) {
             getDialog().getWindow().setBackgroundDrawableResource(android.R.color.transparent);
         }
@@ -42,9 +46,7 @@ public class PopupFragment extends DialogFragment {
             double amount = 0.01 + (2.0 * random.nextDouble());
 
             Executors.newSingleThreadExecutor().execute(() -> {
-                if (getContext() != null) {
-                    AppBaseDeDatos.getDatabase(getContext()).chatDao().addBalance(currentUserId, amount);
-                }
+                operacionesSaldo.addCoins(currentUserId, amount);
             });
 
             final int[] anchorPos = new int[2];

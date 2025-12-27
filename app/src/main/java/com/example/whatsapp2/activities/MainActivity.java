@@ -10,8 +10,8 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.whatsapp2.R;
+import com.example.whatsapp2.api.OperacionesSaldo;
 import com.example.whatsapp2.database.AppBaseDeDatos;
-import com.example.whatsapp2.database.entities.Usuario;
 import com.example.whatsapp2.fragments.ContactsFragment;
 
 import java.util.Locale;
@@ -21,6 +21,7 @@ public class MainActivity extends AppCompatActivity {
 
     private static final int CURRENT_USER_ID = 1; // ID del usuario actual
     private TextView textCoin;
+    private OperacionesSaldo operacionesSaldo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
                     .commit();
         }
 
+        operacionesSaldo = new OperacionesSaldo(AppBaseDeDatos.getDatabase(this).chatDao());
         textCoin = findViewById(R.id.textCoin);
         loadUserCoins();
     }
@@ -51,10 +53,10 @@ public class MainActivity extends AppCompatActivity {
 
     public void loadUserCoins() {
         Executors.newSingleThreadExecutor().execute(() -> {
-            Usuario usuario = AppBaseDeDatos.getDatabase(this).chatDao().getUserById(CURRENT_USER_ID);
-            if (usuario != null) {
+            Double coins = operacionesSaldo.getCoins(CURRENT_USER_ID);
+            if (coins != null) {
                 runOnUiThread(() -> {
-                    String coinsText = String.format(Locale.getDefault(), "%.2f $", usuario.monedas);
+                    String coinsText = String.format(Locale.getDefault(), "%.2f $", coins);
                     textCoin.setText(coinsText);
                 });
             }
