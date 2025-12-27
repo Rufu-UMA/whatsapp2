@@ -36,7 +36,7 @@
             android:id="@+id/textLastMessage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Sahi h"
+            android:text=""
             android:textColor="@android:color/white"
             android:textSize="14sp" />
 
@@ -48,7 +48,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
-        android:text="12/07/18"
+        android:text=""
         android:textColor="@android:color/white"
         android:textSize="12sp" />
 

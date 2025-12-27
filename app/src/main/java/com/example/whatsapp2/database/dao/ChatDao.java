@@ -41,6 +41,10 @@ public abstract class ChatDao {
     @Query("SELECT * FROM mensajes WHERE (usuarioId = :userId AND contactoId = :contactId) OR (usuarioId = :contactId AND contactoId = :userId) ORDER BY HoraEnvio ASC")
     public abstract List<Mensaje> getMessages(int userId, int contactId);
 
+    // Obtener el último mensaje de un chat
+    @Query("SELECT * FROM mensajes WHERE (usuarioId = :userId AND contactoId = :contactId) OR (usuarioId = :contactId AND contactoId = :userId) ORDER BY HoraEnvio DESC LIMIT 1")
+    public abstract Mensaje getLastMessage(int userId, int contactId);
+
     // Enviar mensaje con saldo
     @Transaction
     public boolean enviarMensajeConSaldo(Mensaje mensaje, double costoMensaje) {
