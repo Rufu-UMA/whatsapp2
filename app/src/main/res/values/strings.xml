@@ -12,4 +12,22 @@
     <string name="coste0_80">Coste: 0.80$</string>
     <string name="send">Enviar</string>
     <string name="form">Cuestionario</string>
+
+    <!-- Question 1 -->
+    <string name="question_1">Si pudieras ser un sabor de helado, ¿cuál serías?</string>
+    <string name="q1_answer_1">Vainilla, porque soy clásico y aburrido.</string>
+    <string name="q1_answer_2">Chocolate con chile, ¡picante y sorprendente!</string>
+    <string name="q1_answer_3">Pistacho, un gusto adquirido.</string>
+
+    <!-- Question 2 -->
+    <string name="question_2">¿Qué superpoder inútil te gustaría tener?</string>
+    <string name="q2_answer_1">Hablar con las plantas de plástico.</string>
+    <string name="q2_answer_2">Convertir el agua en agua con gas.</string>
+    <string name="q2_answer_3">Saber siempre la hora, pero solo en Marte.</string>
+
+    <!-- Question 3 -->
+    <string name="question_3">Si los animales pudieran hablar, ¿cuál sería el más grosero?</string>
+    <string name="q3_answer_1">Los gatos, nos juzgan en silencio.</string>
+    <string name="q3_answer_2">Los cisnes, parecen elegantes pero son agresivos.</string>
+    <string name="q3_answer_3">Las gaviotas, ladronas de patatas fritas.</string>
 </resources>

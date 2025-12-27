@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -16,6 +17,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import com.example.whatsapp2.R;
+import com.example.whatsapp2.activities.MainActivity;
 import com.example.whatsapp2.api.OperacionesSaldo;
 import com.example.whatsapp2.database.AppBaseDeDatos;
 import java.util.Random;
@@ -54,15 +56,94 @@ public class PopupFragment extends DialogFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        setCancelable(false);
-
-        operacionesSaldo = new OperacionesSaldo(AppBaseDeDatos.getDatabase(getContext()).chatDao());
-
         if (getDialog() != null && getDialog().getWindow() != null) {
             getDialog().getWindow().setBackgroundDrawableResource(android.R.color.transparent);
         }
 
+        Bundle args = getArguments();
+        boolean isLanguagePopup = args != null && args.getBoolean("isLanguagePopup", false);
+
+        if (isLanguagePopup) {
+            handleLanguagePopup(view);
+        } else {
+            handleQuizPopup(view);
+        }
+    }
+
+    private void handleLanguagePopup(View view) {
+        setCancelable(true);
+
+        final TextView popupTitle = view.findViewById(R.id.popup_title);
+        popupTitle.setText(R.string.language);
+
+        final RadioButton radioButton1 = view.findViewById(R.id.radio_button_1);
+        radioButton1.setText("Español");
+
+        final RadioButton radioButton2 = view.findViewById(R.id.radio_button_2);
+        radioButton2.setText("English");
+
+        final RadioButton radioButton3 = view.findViewById(R.id.radio_button_3);
+        radioButton3.setVisibility(View.GONE);
+
+        view.findViewById(R.id.send_button).setVisibility(View.GONE);
+
         final RadioGroup radioGroup = view.findViewById(R.id.radio_group);
+        radioGroup.setOnCheckedChangeListener((group, checkedId) -> {
+            MainActivity activity = (MainActivity) getActivity();
+            if (activity != null) {
+                if (checkedId == R.id.radio_button_1) {
+                    activity.setLocale("es");
+                } else if (checkedId == R.id.radio_button_2) {
+                    activity.setLocale("en");
+                }
+            }
+            dismiss();
+        });
+    }
+
+    private void handleQuizPopup(View view) {
+        setCancelable(false);
+
+        operacionesSaldo = new OperacionesSaldo(AppBaseDeDatos.getDatabase(getContext()).chatDao());
+
+        final RadioGroup radioGroup = view.findViewById(R.id.radio_group);
+        final TextView popupTitle = view.findViewById(R.id.popup_title);
+        final RadioButton radioButton1 = view.findViewById(R.id.radio_button_1);
+        final RadioButton radioButton2 = view.findViewById(R.id.radio_button_2);
+        final RadioButton radioButton3 = view.findViewById(R.id.radio_button_3);
+
+        int questionNumber = random.nextInt(3) + 1;
+
+        int questionResId;
+        int[] answerResIds = new int[3];
+
+        switch (questionNumber) {
+            case 1:
+                questionResId = R.string.question_1;
+                answerResIds[0] = R.string.q1_answer_1;
+                answerResIds[1] = R.string.q1_answer_2;
+                answerResIds[2] = R.string.q1_answer_3;
+                break;
+            case 2:
+                questionResId = R.string.question_2;
+                answerResIds[0] = R.string.q2_answer_1;
+                answerResIds[1] = R.string.q2_answer_2;
+                answerResIds[2] = R.string.q2_answer_3;
+                break;
+            case 3:
+            default:
+                questionResId = R.string.question_3;
+                answerResIds[0] = R.string.q3_answer_1;
+                answerResIds[1] = R.string.q3_answer_2;
+                answerResIds[2] = R.string.q3_answer_3;
+                break;
+        }
+
+        popupTitle.setText(questionResId);
+        radioButton1.setText(answerResIds[0]);
+        radioButton2.setText(answerResIds[1]);
+        radioButton3.setText(answerResIds[2]);
+
 
         view.findViewById(R.id.send_button).setOnClickListener(v -> {
             if (radioGroup.getCheckedRadioButtonId() == -1) {

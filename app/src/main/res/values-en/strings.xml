@@ -1,0 +1,33 @@
+<resources>
+    <!-- Pongo los String en variables -->
+    <string name="app_name">Whatsapp2</string>
+    <string name="coin_image_description">Coin</string>
+    <string name="coin_default_value">0$</string>
+    <string name="language">Language</string>
+    <string name="notifications">Notifications</string>
+    <string name="settings">Settings</string>
+    <string name="profile_image">Profile image</string>
+    <string name="contact_name_placeholder">Contact Name</string>
+    <string name="mensaje">Message</string>
+    <string name="coste0_80">Cost: 0.80$</string>
+    <string name="send">Send</string>
+    <string name="form">Form</string>
+
+    <!-- Question 1 -->
+    <string name="question_1">If you could be an ice cream flavor, which one would you be?</string>
+    <string name="q1_answer_1">Vanilla, because I am classic and boring.</string>
+    <string name="q1_answer_2">Chocolate with chili, spicy and surprising!</string>
+    <string name="q1_answer_3">Pistachio, an acquired taste.</string>
+
+    <!-- Question 2 -->
+    <string name="question_2">What useless superpower would you like to have?</string>
+    <string name="q2_answer_1">Talk to plastic plants.</string>
+    <string name="q2_answer_2">Turn water into sparkling water.</string>
+    <string name="q2_answer_3">Always know the time, but only on Mars.</string>
+
+    <!-- Question 3 -->
+    <string name="question_3">If animals could talk, which one would be the rudest?</string>
+    <string name="q3_answer_1">Cats, they judge us in silence.</string>
+    <string name="q3_answer_2">Swans, they look elegant but are aggressive.</string>
+    <string name="q3_answer_3">Seagulls, thieves of french fries.</string>
+</resources>
