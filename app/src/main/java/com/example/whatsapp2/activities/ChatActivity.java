@@ -23,6 +23,7 @@ import com.example.whatsapp2.adapters.MessagesAdapter;
 import com.example.whatsapp2.utils.Botkit;
 
 import java.util.List;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class ChatActivity extends AppCompatActivity {
@@ -36,6 +37,10 @@ public class ChatActivity extends AppCompatActivity {
     private MessagesAdapter adapter;
     private int currentUserId = 1; // Como no hay login, este será el id del usuario actual
 
+    // ExecutorService para manejar hilos en segundo plano de forma eficiente y evitar cierres por exceso de hilos
+    private final ExecutorService executorService = Executors.newSingleThreadExecutor();
+    private final Handler mainHandler = new Handler(Looper.getMainLooper());
+
     /**
      * Método que se ejecuta al crear la actividad.
      * Inicializa la interfaz, recupera los datos del contacto y configura el RecyclerView.
@@ -45,31 +50,50 @@ public class ChatActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_chat);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main_chat), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
-        
-        // Se borró la personalización manual de la barra de estado transparente y flags de sistema
 
+        View mainView = findViewById(R.id.main_chat);
+        if (mainView != null) {
+            ViewCompat.setOnApplyWindowInsetsListener(mainView, (v, insets) -> {
+                Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+                v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+                return insets;
+            });
+        }
+        
         contactId = getIntent().getIntExtra("CONTACT_ID", -1);
         contactName = getIntent().getStringExtra("CONTACT_NAME");
 
         TextView nombre = findViewById(R.id.contactName);
-        nombre.setText(contactName);
+        if (nombre != null) {
+            nombre.setText(contactName);
+        }
 
         editTextMessage = findViewById(R.id.editTextMessage);
         buttonSend = findViewById(R.id.buttonSend);
         backButton = findViewById(R.id.backButton);
         recyclerViewMessages = findViewById(R.id.recyclerViewMessages);
-        recyclerViewMessages.setLayoutManager(new LinearLayoutManager(this));
+        if (recyclerViewMessages != null) {
+            recyclerViewMessages.setLayoutManager(new LinearLayoutManager(this));
+        }
 
         loadMessages();
 
-        buttonSend.setOnClickListener(v -> sendMessage());
+        if (buttonSend != null) {
+            buttonSend.setOnClickListener(v -> sendMessage());
+        }
 
-        backButton.setOnClickListener(v -> finish());
+        if (backButton != null) {
+            backButton.setOnClickListener(v -> finish());
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        // Liberar recursos del ExecutorService al cerrar la actividad
+        if (executorService != null && !executorService.isShutdown()) {
+            executorService.shutdown();
+        }
     }
 
     /**
@@ -77,15 +101,23 @@ public class ChatActivity extends AppCompatActivity {
      * y actualiza la lista en el hilo principal.
      */
     private void loadMessages() {
-        Executors.newSingleThreadExecutor().execute(() -> {
-            List<Mensaje> messages = AppBaseDeDatos.getDatabase(this).chatDao().getMessages(currentUserId, contactId);
-            runOnUiThread(() -> {
-                adapter = new MessagesAdapter(messages, currentUserId);
-                recyclerViewMessages.setAdapter(adapter);
-                if (!messages.isEmpty()) {
-                    recyclerViewMessages.scrollToPosition(messages.size() - 1);
-                }
-            });
+        if (executorService.isShutdown()) return;
+
+        executorService.execute(() -> {
+            try {
+                List<Mensaje> messages = AppBaseDeDatos.getDatabase(this).chatDao().getMessages(currentUserId, contactId);
+                runOnUiThread(() -> {
+                    if (recyclerViewMessages != null) {
+                        adapter = new MessagesAdapter(messages, currentUserId);
+                        recyclerViewMessages.setAdapter(adapter);
+                        if (!messages.isEmpty()) {
+                            recyclerViewMessages.scrollToPosition(messages.size() - 1);
+                        }
+                    }
+                });
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         });
     }
 
@@ -94,6 +126,7 @@ public class ChatActivity extends AppCompatActivity {
      * Verifica el saldo (costo 0.80) y muestra un error si es insuficiente.
      */
     private void sendMessage() {
+        if (editTextMessage == null) return;
         String content = editTextMessage.getText().toString();
         if (!content.isEmpty()) {
             Mensaje mensaje = new Mensaje();
@@ -102,29 +135,36 @@ public class ChatActivity extends AppCompatActivity {
             mensaje.contenido = content;
             mensaje.HoraEnvio = System.currentTimeMillis();
 
-            Executors.newSingleThreadExecutor().execute(() -> {
-                // Verificar saldo antes de enviar (para depuración)
-                Double saldoAntes = AppBaseDeDatos.getDatabase(this).chatDao().getUserBalance(currentUserId);
-                Log.d("ChatActivity", "Saldo antes de enviar: " + saldoAntes + " para usuario ID: " + currentUserId);
+            if (executorService.isShutdown()) return;
 
-                // Intentamos enviar el mensaje con un costo de 0.80 monedas
-                boolean enviado = AppBaseDeDatos.getDatabase(this).chatDao().enviarMensajeConSaldo(mensaje, 0.80);
+            executorService.execute(() -> {
+                try {
+                    // Verificar saldo antes de enviar (para depuración)
+                    Double saldoAntes = AppBaseDeDatos.getDatabase(this).chatDao().getUserBalance(currentUserId);
+                    Log.d("ChatActivity", "Saldo antes de enviar: " + saldoAntes + " para usuario ID: " + currentUserId);
 
-                Double saldoDespues = AppBaseDeDatos.getDatabase(this).chatDao().getUserBalance(currentUserId);
-                Log.d("ChatActivity", "Saldo después de enviar: " + saldoDespues + " | Enviado: " + enviado);
+                    // Intentamos enviar el mensaje con un costo de 0.80 monedas
+                    boolean enviado = AppBaseDeDatos.getDatabase(this).chatDao().enviarMensajeConSaldo(mensaje, 0.80);
 
-                runOnUiThread(() -> {
-                    if (enviado) {
-                        // Si se envió correctamente, limpiamos el campo y recargamos
-                        editTextMessage.setText("");
-                        loadMessages();
-                        // Simular respuesta del contacto
-                        simulateResponse(content);
-                    } else {
-                        // Si falló (saldo insuficiente), mostramos un mensaje de error
-                        Toast.makeText(ChatActivity.this, "Error: Saldo insuficiente. Necesitas 0.80 monedas.", Toast.LENGTH_LONG).show();
-                    }
-                });
+                    Double saldoDespues = AppBaseDeDatos.getDatabase(this).chatDao().getUserBalance(currentUserId);
+                    Log.d("ChatActivity", "Saldo después de enviar: " + saldoDespues + " | Enviado: " + enviado);
+
+                    runOnUiThread(() -> {
+                        if (enviado) {
+                            // Si se envió correctamente, limpiamos el campo y recargamos
+                            editTextMessage.setText("");
+                            loadMessages();
+                            // Simular respuesta del contacto
+                            simulateResponse(content);
+                        } else {
+                            // Si falló (saldo insuficiente), mostramos un mensaje de error
+                            Toast.makeText(ChatActivity.this, "Error: Saldo insuficiente. Necesitas 0.80 monedas.", Toast.LENGTH_LONG).show();
+                        }
+                    });
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    runOnUiThread(() -> Toast.makeText(ChatActivity.this, "Error al enviar mensaje", Toast.LENGTH_SHORT).show());
+                }
             });
         } else {
             Toast.makeText(this, "Por favor, escribe un mensaje.", Toast.LENGTH_SHORT).show(); // Se muestra una ventana de error
@@ -132,20 +172,29 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     private void simulateResponse(String userMessage) {
-        new Handler(Looper.getMainLooper()).postDelayed(() -> {
-            Executors.newSingleThreadExecutor().execute(() -> {
-                String botReply = Botkit.getResponse(userMessage);
-                
-                Mensaje response = new Mensaje();
-                response.usuarioId = contactId; // El remitente es el contacto
-                response.contactoId = currentUserId; // El destinatario es el usuario actual
-                response.contenido = botReply;
-                response.HoraEnvio = System.currentTimeMillis();
-                
-                // Insertar mensaje de respuesta (sin costo para el usuario)
-                AppBaseDeDatos.getDatabase(this).chatDao().insertMensaje(response);
-                
-                runOnUiThread(this::loadMessages);
+        mainHandler.postDelayed(() -> {
+            if (executorService.isShutdown()) return;
+
+            executorService.execute(() -> {
+                try {
+                    String botReply = Botkit.getResponse(userMessage);
+                    if (botReply.contains("Sahi h")) {
+                         botReply = "Interesante..."; 
+                    }
+                    
+                    Mensaje response = new Mensaje();
+                    response.usuarioId = contactId; // El remitente es el contacto
+                    response.contactoId = currentUserId; // El destinatario es el usuario actual
+                    response.contenido = botReply;
+                    response.HoraEnvio = System.currentTimeMillis();
+                    
+                    // Insertar mensaje de respuesta (sin costo para el usuario)
+                    AppBaseDeDatos.getDatabase(this).chatDao().insertMensaje(response);
+                    
+                    runOnUiThread(this::loadMessages);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             });
         }, 1000); // Retraso de 1 segundo para simular "escribiendo..."
     }
