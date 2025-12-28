@@ -1,15 +1,22 @@
 package com.example.whatsapp2.activities;
 
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.app.AlertDialog;
 
 import androidx.activity.EdgeToEdge;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -33,6 +40,11 @@ public class MainActivity extends AppCompatActivity implements PopupFragment.OnC
     private TextView textCoin;
     private OperacionesSaldo operacionesSaldo;
     private ImageButton fabNewMessage;
+    
+    // Variables para selección de imagen
+    private Uri selectedImageUri;
+    private ImageView dialogImageView;
+    private ActivityResultLauncher<Intent> imagePickerLauncher;
 
     // ExecutorService único para esta actividad
     private final ExecutorService executorService = Executors.newSingleThreadExecutor();
@@ -47,6 +59,25 @@ public class MainActivity extends AppCompatActivity implements PopupFragment.OnC
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        // Configurar launcher para seleccionar imagen de galería
+        imagePickerLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == RESULT_OK && result.getData() != null) {
+                        selectedImageUri = result.getData().getData();
+                        if (dialogImageView != null && selectedImageUri != null) {
+                            // Persistir permiso de lectura para la URI
+                            try {
+                                getContentResolver().takePersistableUriPermission(selectedImageUri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                            } catch (SecurityException e) {
+                                e.printStackTrace();
+                            }
+                            dialogImageView.setImageURI(selectedImageUri);
+                        }
+                    }
+                }
+        );
 
         if (savedInstanceState == null) { // Si no hay estado guardado, se carga el fragmento de contactos
             getSupportFragmentManager().beginTransaction()
@@ -127,19 +158,36 @@ public class MainActivity extends AppCompatActivity implements PopupFragment.OnC
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         View view = getLayoutInflater().inflate(R.layout.dialog_add_contact, null);
         final EditText editName = view.findViewById(R.id.editName);
-        final EditText editPhoto = view.findViewById(R.id.editPhotoUrl);
+        
+        // Configurar selección de imagen
+        dialogImageView = view.findViewById(R.id.imagePreview);
+        View selectImageButton = view.findViewById(R.id.buttonSelectImage);
+        selectedImageUri = null; // Resetear selección anterior
+
+        if (selectImageButton != null) {
+            selectImageButton.setOnClickListener(v -> openGallery());
+        }
         
         builder.setView(view)
                 .setPositiveButton(R.string.add, (dialog, which) -> {
                     String name = editName.getText().toString();
-                    String photo = editPhoto.getText().toString();
+                    // Usar la URI seleccionada o null
+                    String photoUrl = (selectedImageUri != null) ? selectedImageUri.toString() : "";
+                    
                     if (!name.isEmpty()) {
-                        addNewContact(name, photo);
+                        addNewContact(name, photoUrl);
                     }
                 })
                 .setNegativeButton(R.string.cancel, null)
                 .create()
                 .show();
+    }
+    
+    private void openGallery() {
+        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        intent.setType("image/*");
+        imagePickerLauncher.launch(intent);
     }
 
     private void addNewContact(String name, String photoUrl) {

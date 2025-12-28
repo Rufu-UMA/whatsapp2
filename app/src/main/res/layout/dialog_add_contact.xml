@@ -9,35 +9,48 @@
         android:id="@+id/dialogTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Añadir nuevo contacto"
+        android:layout_marginBottom="16dp"
+        android:text="@string/add_contact_title"
         android:textSize="20sp"
-        android:textStyle="bold"
-        android:layout_marginBottom="16dp"/>
+        android:textStyle="bold" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
-        android:hint="Nombre">
+        android:hint="@string/hint_name">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/editName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="textPersonName"/>
+            android:inputType="textPersonName" />
     </com.google.android.material.textfield.TextInputLayout>
 
-    <com.google.android.material.textfield.TextInputLayout
+    <!-- Eliminado InputTextURL y sustituido por botón e imagen -->
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:hint="URL Foto de Perfil (Opcional)">
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="16dp">
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/editPhotoUrl"
-            android:layout_width="match_parent"
+        <ImageView
+            android:id="@+id/imagePreview"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:src="@drawable/ic_launcher_foreground"
+            android:layout_marginEnd="16dp"
+            android:background="@drawable/gold_circle"
+            android:padding="5dp"/>
+
+        <Button
+            android:id="@+id/buttonSelectImage"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:inputType="textUri"/>
-    </com.google.android.material.textfield.TextInputLayout>
+            android:text="Seleccionar Imagen"
+            android:backgroundTint="@color/golden_text"/>
+
+    </LinearLayout>
 
 </LinearLayout>
