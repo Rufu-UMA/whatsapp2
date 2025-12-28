@@ -10,9 +10,11 @@ import java.util.concurrent.Executors;
 import com.example.whatsapp2.database.dao.ChatDao;
 import com.example.whatsapp2.database.entities.Mensaje;
 import com.example.whatsapp2.database.entities.Usuario;
+
 @Database(entities = {Usuario.class, Mensaje.class}, version = 4)
 public abstract class AppBaseDeDatos extends RoomDatabase {
-    private static AppBaseDeDatos INSTANCE;
+    // volatile asegura que INSTANCE sea visible inmediatamente para todos los hilos
+    private static volatile AppBaseDeDatos INSTANCE;
     public abstract ChatDao chatDao();
 
     public static AppBaseDeDatos getDatabase(final Context context) {
@@ -26,28 +28,31 @@ public abstract class AppBaseDeDatos extends RoomDatabase {
                                 @Override
                                 public void onCreate(@NonNull SupportSQLiteDatabase db) {
                                     super.onCreate(db);
-                                    /*
+
+                                    // Usamos un hilo separado para poblar la BD inicial
                                     Executors.newSingleThreadExecutor().execute(() -> {
                                         // Usuario actual (ID 1)
                                         Usuario miUsuario = new Usuario();
                                         miUsuario.nombre = "Yo";
                                         miUsuario.monedas = 1.0;
-                                        INSTANCE.chatDao().insertUsuario(miUsuario);
+                                        // Validar que no sea nulo antes de insertar (por seguridad en callbacks asíncronos)
+                                        if (INSTANCE != null) {
+                                            INSTANCE.chatDao().insertUsuario(miUsuario);
+                                        }
 
-                                        // Contactos
+                                        /* 
+                                        // Contactos de prueba (Descomentar si se quieren datos iniciales)
                                         Usuario user1 = new Usuario();
                                         user1.nombre = "Agustín Valverde Ramos";
                                         user1.monedas = 5000;
-                                        INSTANCE.chatDao().insertUsuario(user1);
+                                        if (INSTANCE != null) INSTANCE.chatDao().insertUsuario(user1);
 
                                         Usuario user2 = new Usuario();
                                         user2.nombre = "Eduardo Medina Cano";
                                         user2.monedas = 5;
-                                        INSTANCE.chatDao().insertUsuario(user2);
-                                    }); // Estos usuarios iniciales se crean al instalar la app por primera vez
-                                    // Para borrar la base de datos y que se vuelvan a crear, hay que desinstalar la app
-                                    */
-
+                                        if (INSTANCE != null) INSTANCE.chatDao().insertUsuario(user2);
+                                        */
+                                    });
                                 }
                             })
                             .build();
@@ -56,5 +61,4 @@ public abstract class AppBaseDeDatos extends RoomDatabase {
         }
         return INSTANCE;
     }
-
 }
