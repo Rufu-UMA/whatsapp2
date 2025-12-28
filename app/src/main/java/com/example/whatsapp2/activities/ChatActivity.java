@@ -172,6 +172,7 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     private void simulateResponse(String userMessage) {
+        if (mainHandler == null) return;
         mainHandler.postDelayed(() -> {
             if (executorService.isShutdown()) return;
 

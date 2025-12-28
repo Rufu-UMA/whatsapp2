@@ -26,6 +26,7 @@ public abstract class AppBaseDeDatos extends RoomDatabase {
                                 @Override
                                 public void onCreate(@NonNull SupportSQLiteDatabase db) {
                                     super.onCreate(db);
+                                    /*
                                     Executors.newSingleThreadExecutor().execute(() -> {
                                         // Usuario actual (ID 1)
                                         Usuario miUsuario = new Usuario();
@@ -45,6 +46,8 @@ public abstract class AppBaseDeDatos extends RoomDatabase {
                                         INSTANCE.chatDao().insertUsuario(user2);
                                     }); // Estos usuarios iniciales se crean al instalar la app por primera vez
                                     // Para borrar la base de datos y que se vuelvan a crear, hay que desinstalar la app
+                                    */
+
                                 }
                             })
                             .build();

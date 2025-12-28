@@ -24,6 +24,7 @@ import com.example.whatsapp2.fragments.ContactsFragment;
 import com.example.whatsapp2.fragments.PopupFragment;
 
 import java.util.Locale;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class MainActivity extends AppCompatActivity implements PopupFragment.OnCoinUpdateListener {
@@ -32,6 +33,9 @@ public class MainActivity extends AppCompatActivity implements PopupFragment.OnC
     private TextView textCoin;
     private OperacionesSaldo operacionesSaldo;
     private ImageButton fabNewMessage;
+
+    // ExecutorService único para esta actividad
+    private final ExecutorService executorService = Executors.newSingleThreadExecutor();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,10 +81,19 @@ public class MainActivity extends AppCompatActivity implements PopupFragment.OnC
         loadUserCoins();
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (executorService != null && !executorService.isShutdown()) {
+            executorService.shutdown();
+        }
+    }
+
     public void loadUserCoins() {
         if (textCoin == null) return;
-        
-        Executors.newSingleThreadExecutor().execute(() -> {
+        if (executorService.isShutdown()) return;
+
+        executorService.execute(() -> {
             try {
                 Double coins = operacionesSaldo.getCoins(CURRENT_USER_ID);
                 if (coins != null) {
@@ -130,7 +143,9 @@ public class MainActivity extends AppCompatActivity implements PopupFragment.OnC
     }
 
     private void addNewContact(String name, String photoUrl) {
-        Executors.newSingleThreadExecutor().execute(() -> {
+        if (executorService.isShutdown()) return;
+        
+        executorService.execute(() -> {
             Usuario newUser = new Usuario();
             newUser.nombre = name;
             newUser.fotoPerfil = photoUrl;
