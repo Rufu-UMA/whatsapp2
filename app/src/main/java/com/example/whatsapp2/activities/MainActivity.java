@@ -78,13 +78,19 @@ public class MainActivity extends AppCompatActivity implements PopupFragment.OnC
     }
 
     public void loadUserCoins() {
+        if (textCoin == null) return;
+        
         Executors.newSingleThreadExecutor().execute(() -> {
-            Double coins = operacionesSaldo.getCoins(CURRENT_USER_ID);
-            if (coins != null) {
-                runOnUiThread(() -> {
-                    String coinsText = String.format(Locale.getDefault(), "%.2f $", coins);
-                    textCoin.setText(coinsText);
-                });
+            try {
+                Double coins = operacionesSaldo.getCoins(CURRENT_USER_ID);
+                if (coins != null) {
+                    runOnUiThread(() -> {
+                        String coinsText = String.format(Locale.getDefault(), "%.2f $", coins);
+                        textCoin.setText(coinsText);
+                    });
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         });
     }
@@ -96,12 +102,12 @@ public class MainActivity extends AppCompatActivity implements PopupFragment.OnC
 
     public void setLocale(String lang) {
         Locale myLocale = new Locale(lang);
+        Locale.setDefault(myLocale);
         Resources res = getResources();
         Configuration conf = res.getConfiguration();
         conf.setLocale(myLocale);
         res.updateConfiguration(conf, res.getDisplayMetrics());
         recreate();
-
     }
     
     private void showAddContactDialog() {
@@ -109,16 +115,16 @@ public class MainActivity extends AppCompatActivity implements PopupFragment.OnC
         View view = getLayoutInflater().inflate(R.layout.dialog_add_contact, null);
         final EditText editName = view.findViewById(R.id.editName);
         final EditText editPhoto = view.findViewById(R.id.editPhotoUrl);
-
+        
         builder.setView(view)
-                .setPositiveButton("Añadir", (dialog, which) -> {
+                .setPositiveButton(R.string.add, (dialog, which) -> {
                     String name = editName.getText().toString();
                     String photo = editPhoto.getText().toString();
                     if (!name.isEmpty()) {
                         addNewContact(name, photo);
                     }
                 })
-                .setNegativeButton("Cancelar", null)
+                .setNegativeButton(R.string.cancel, null)
                 .create()
                 .show();
     }

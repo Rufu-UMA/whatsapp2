@@ -1,5 +1,4 @@
 <resources>
-    <!-- Pongo los String en variables -->
     <string name="app_name">Whatsapp2</string>
     <string name="coin_image_description">Moneda</string>
     <string name="coin_default_value">0$</string>
@@ -12,13 +11,6 @@
     <string name="coste0_80">Coste: 0.80$</string>
     <string name="send">Enviar</string>
     <string name="form">Cuestionario</string>
-    
-    <!-- Dialog Add Contact -->
-    <string name="add_contact_title">Añadir nuevo contacto</string>
-    <string name="hint_name">Nombre</string>
-    <string name="hint_photo">URL Foto de Perfil (Opcional)</string>
-    <string name="add">Añadir</string>
-    <string name="cancel">Cancelar</string>
 
     <!-- Questions for the Quiz -->
     <string name="question_1">¿Cuál es el océano más grande del mundo?</string>
