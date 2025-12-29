@@ -36,8 +36,6 @@ public class PopupFragment extends DialogFragment {
         super.onAttach(context);
         if (context instanceof OnCoinUpdateListener) {
             listener = (OnCoinUpdateListener) context;
-        } else {
-            throw new RuntimeException(context.toString() + " must implement OnCoinUpdateListener");
         }
     }
 

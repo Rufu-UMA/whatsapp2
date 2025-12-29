@@ -54,9 +54,14 @@ public class ChatActivity extends AppCompatActivity {
         View mainView = findViewById(R.id.main_chat);
         if (mainView != null) {
             ViewCompat.setOnApplyWindowInsetsListener(mainView, (v, insets) -> {
-                Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-                v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-                return insets;
+                // We look for both System Bars AND the Keyboard (IME)
+                Insets combinedInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars() | WindowInsetsCompat.Type.ime());
+
+                // Apply the padding. The bottom padding will now automatically
+                // become the height of the keyboard when it opens.
+                v.setPadding(combinedInsets.left, combinedInsets.top, combinedInsets.right, combinedInsets.bottom);
+
+                return WindowInsetsCompat.CONSUMED;
             });
         }
         
