@@ -19,6 +19,7 @@
     <string name="hint_photo">URL Foto de Perfil (Opcional)</string>
     <string name="add">Añadir</string>
     <string name="cancel">Cancelar</string>
+    <string name="select_image">Seleccionar imagen</string>
 
     <!-- Questions for the Quiz -->
     <string name="question_1">¿Cuál es el océano más grande del mundo?</string>
