@@ -13,6 +13,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.app.AlertDialog;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.activity.result.ActivityResultLauncher;
@@ -153,34 +154,47 @@ public class MainActivity extends AppCompatActivity implements PopupFragment.OnC
         res.updateConfiguration(conf, res.getDisplayMetrics());
         recreate();
     }
-    
     private void showAddContactDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         View view = getLayoutInflater().inflate(R.layout.dialog_add_contact, null);
+
+        // Create the dialog
+        AlertDialog dialog = builder.setView(view).create();
+
+        // Transparent background for the dialog window so the Nine-Patch shows its shape
+        if (dialog.getWindow() != null) {
+            dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        }
+
         final EditText editName = view.findViewById(R.id.editName);
-        
-        // Configurar selección de imagen
         dialogImageView = view.findViewById(R.id.imagePreview);
         View selectImageButton = view.findViewById(R.id.buttonSelectImage);
-        selectedImageUri = null; // Resetear selección anterior
+        Button btnCancel = view.findViewById(R.id.btnCancel);
+        Button btnAdd = view.findViewById(R.id.btnAdd);
+
+        selectedImageUri = null;
 
         if (selectImageButton != null) {
             selectImageButton.setOnClickListener(v -> openGallery());
         }
-        
-        builder.setView(view)
-                .setPositiveButton(R.string.add, (dialog, which) -> {
-                    String name = editName.getText().toString();
-                    // Usar la URI seleccionada o null
-                    String photoUrl = (selectedImageUri != null) ? selectedImageUri.toString() : "";
-                    
-                    if (!name.isEmpty()) {
-                        addNewContact(name, photoUrl);
-                    }
-                })
-                .setNegativeButton(R.string.cancel, null)
-                .create()
-                .show();
+
+        // Handle Cancel Button
+        btnCancel.setOnClickListener(v -> dialog.dismiss());
+
+        // Handle Add Button
+        btnAdd.setOnClickListener(v -> {
+            String name = editName.getText().toString();
+            String photoUrl = (selectedImageUri != null) ? selectedImageUri.toString() : "";
+
+            if (!name.isEmpty()) {
+                addNewContact(name, photoUrl);
+                dialog.dismiss();
+            } else {
+                Toast.makeText(this, R.string.hint_name, Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        dialog.show();
     }
     
     private void openGallery() {

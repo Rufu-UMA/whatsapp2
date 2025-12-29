@@ -20,6 +20,8 @@ import com.example.whatsapp2.R;
 import com.example.whatsapp2.activities.MainActivity;
 import com.example.whatsapp2.api.OperacionesSaldo;
 import com.example.whatsapp2.database.AppBaseDeDatos;
+
+import java.util.Locale;
 import java.util.Random;
 import java.util.concurrent.Executors;
 
@@ -84,6 +86,16 @@ public class PopupFragment extends DialogFragment {
         radioButton3.setVisibility(View.GONE);
 
         view.findViewById(R.id.send_button).setVisibility(View.GONE);
+
+        // --- ROBUST LOGIC TO PRE-SELECT CURRENT LANGUAGE ---
+// Get the language directly from the current resources configuration
+        String currentLang = getResources().getConfiguration().getLocales().get(0).getLanguage();
+
+        if (currentLang.startsWith("es")) {
+            radioButton1.setChecked(true);
+        } else if (currentLang.startsWith("en")) {
+            radioButton2.setChecked(true);
+        }
 
         final RadioGroup radioGroup = view.findViewById(R.id.radio_group);
         radioGroup.setOnCheckedChangeListener((group, checkedId) -> {

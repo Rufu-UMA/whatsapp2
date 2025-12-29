@@ -13,6 +13,7 @@
         android:layout_height="wrap_content"
         android:background="@drawable/box_golden_nine_patch"
         android:orientation="vertical"
+        android:minWidth="300dp"
         android:padding="24dp">
 
         <TextView
@@ -27,13 +28,13 @@
 
         <RadioGroup
             android:id="@+id/radio_group"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp">
 
             <RadioButton
                 android:id="@+id/radio_button_1"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Option 1"
                 android:textColor="@color/golden_text"
@@ -41,7 +42,7 @@
 
             <RadioButton
                 android:id="@+id/radio_button_2"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Option 2"
                 android:textColor="@color/golden_text"
@@ -49,7 +50,7 @@
 
             <RadioButton
                 android:id="@+id/radio_button_3"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Option 3"
                 android:textColor="@color/golden_text"
@@ -60,14 +61,12 @@
             android:id="@+id/send_button"
             android:layout_width="152dp"
             android:layout_height="47dp"
+            android:layout_gravity="center_horizontal"
             android:layout_marginTop="24dp"
-            android:background="@drawable/box_golden_nine_patch"
+            android:background="@drawable/button_background"
             android:backgroundTint="#00FFFFFF"
             android:text="@string/send"
-            android:textColor="@color/black"
-            android:textColorLink="#FFFFFF"
-            android:layout_gravity="center_horizontal"
-            />
+            android:textColor="@color/black" />
 
     </LinearLayout>
 </androidx.cardview.widget.CardView>

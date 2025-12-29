@@ -34,9 +34,10 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
+        android:layout_marginBottom="24dp"
         android:gravity="center_vertical"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:translationY="10dp">
 
         <RelativeLayout
             android:layout_width="60dp"
@@ -52,9 +53,9 @@
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:layout_centerInParent="true"
+                app:cardBackgroundColor="@android:color/transparent"
                 app:cardCornerRadius="25dp"
-                app:cardElevation="0dp"
-                app:cardBackgroundColor="@android:color/transparent">
+                app:cardElevation="0dp">
 
                 <ImageView
                     android:id="@+id/imagePreview"
@@ -69,9 +70,33 @@
             android:id="@+id/buttonSelectImage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:backgroundTint="@color/golden_text"
-            android:text="@string/select_image" />
+            android:background="@drawable/button_background"
+            android:text="@string/select_image"
+            android:textColor="@android:color/black" />
+    </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="end"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btnCancel"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/cancel"
+            android:textColor="@color/golden_text" />
+
+        <Button
+            android:id="@+id/btnAdd"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:background="@drawable/button_background"
+            android:text="@string/add"
+            android:textColor="@android:color/black" />
     </LinearLayout>
 
 </LinearLayout>
